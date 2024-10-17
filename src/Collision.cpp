@@ -41,12 +41,10 @@ bool Collision::IntersectPolygons(Body2D& Body1, Body2D& Body2, Vector2 centerA,
     normal = { 0.0f, 0.0f };
     depth = std::numeric_limits<float>::max();
 
-    // Helper function to normalize the axis consistently
     auto getNormalizedAxis = [](Vector2 edge) {
         return Vector2Normalize({ -edge.y, edge.x });
     };
 
-    // Helper function to calculate projection of vertices on axis
     auto ProjectVertices = [](const std::vector<Vector2>& vertices, Vector2 axis, float& min, float& max) {
         min = Vector2DotProduct(axis, vertices[0]);
         max = min;
@@ -58,7 +56,6 @@ bool Collision::IntersectPolygons(Body2D& Body1, Body2D& Body2, Vector2 centerA,
         }
     };
 
-    // Check axes of Body A
     for (int i = 0; i < (int)verticesA.size(); i++) {
         Vector2 va = verticesA[i];
         Vector2 vb = verticesA[(i + 1) % verticesA.size()];
@@ -70,16 +67,14 @@ bool Collision::IntersectPolygons(Body2D& Body1, Body2D& Body2, Vector2 centerA,
         ProjectVertices(verticesA, axis, minA, maxA);
         ProjectVertices(verticesB, axis, minB, maxB);
 
-        // If there's no overlap, return false
         if (minA >= maxB || minB >= maxA) {
             return false;
         }
 
-        // Find the minimum depth of penetration along this axis
         float axisDepth = std::min(maxB - minA, maxA - minB);
         if (axisDepth < depth) {
             depth = axisDepth;
-            normal = axis;  // Store the axis that results in the smallest overlap
+            normal = axis;  
         }
     }
 
@@ -95,20 +90,17 @@ bool Collision::IntersectPolygons(Body2D& Body1, Body2D& Body2, Vector2 centerA,
         ProjectVertices(verticesA, axis, minA, maxA);
         ProjectVertices(verticesB, axis, minB, maxB);
 
-        // If there's no overlap, return false
         if (minA >= maxB || minB >= maxA) {
             return false;
         }
 
-        // Find the minimum depth of penetration along this axis
         float axisDepth = std::min(maxB - minA, maxA - minB);
         if (axisDepth < depth) {
             depth = axisDepth;
-            normal = axis;  // Store the axis that results in the smallest overlap
+            normal = axis;  
         }
     }
 
-    // Ensure normal points from A to B
     Vector2 direction = Vector2Subtract(centerA, centerB);
     if (Vector2DotProduct(direction, normal) < 0) {
         normal = Vector2Negate(normal);
@@ -419,10 +411,9 @@ bool Collision::IntersectAABB(AABB aabb1, AABB aabb2) {
     return true;
 }
 
-// Function to calculate the squared distance between a point and a line segment
 void Collision::PointSegmentDistance( Vector2 p,  Vector2 a,  Vector2 b, float& distanceSquared, Vector2& cp) {
-    Vector2 ab = Vector2Subtract(b, a);  // ab = b - a
-    Vector2 ap = Vector2Subtract(p, a);  // ap = p - a
+    Vector2 ab = Vector2Subtract(b, a);  
+    Vector2 ap = Vector2Subtract(p, a);  
 
     float proj = Vector2DotProduct(ap, ab);
     float abLenSq = Vector2LengthSqr(ab);
@@ -439,12 +430,12 @@ void Collision::PointSegmentDistance( Vector2 p,  Vector2 a,  Vector2 b, float& 
     distanceSquared = Vector2LengthSqr(Vector2Subtract(p, cp));
 }
 
-// Function to find the closest contact point between a circle and a polygon
+// finding closest point between a circle and a polygon
 Vector2 Collision::FindContactPoint( Body2D& Box, Body2D& Circle){
     std::vector<Vector2> polygonVertices;
     Box.getVertices(polygonVertices);
     Vector2 circleCenter = Circle.getPosition();
-    Vector2 cp = {0.0f, 0.0f};  // Initialize cp
+    Vector2 cp = {0.0f, 0.0f};  // init a contact point
     float minDistSq = std::numeric_limits<float>::max();
 
     for (size_t i = 0; i < polygonVertices.size(); i++) {
@@ -469,7 +460,6 @@ bool NearlyEqual(float f1, float f2, float epsilon = 0.01f) {
     return std::fabs(f1 - f2) < epsilon;
 }
 
-// Function to find two contact points between two sets of vertices (polygons)
 void Collision::FindContactPointsBoxBox(Body2D& Body1, Body2D& Body2,Vector2& contact1, Vector2& contact2, int& contactCount) {
     contactCount = 0;
     std::vector<Vector2> verticesA;
