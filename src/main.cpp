@@ -5,12 +5,12 @@ int main() {
     SetTargetFPS(0);
     std::vector<Vector2> points = { { -400, -300 }, { 400, -300 }, { 400, 300 }, { -400, 300 } };
     while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
         if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT )||IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
         engine.dropbody();
-        engine.camerahandle();
         engine.Update();
+                BeginDrawing();
+                        ClearBackground(RAYWHITE);
+        engine.camerahandle();
         engine.bodydraw();
         EndDrawing();
     }
