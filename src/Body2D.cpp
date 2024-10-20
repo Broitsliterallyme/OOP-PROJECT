@@ -8,19 +8,13 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
     Velocity = {0, 0};
     Acceleration = {0, 0};
     Force = {0, 0};
-    RotationalVelocity = 0.0f;
-    Rotation = 0.0f;
-    if(shape==ShapeType::Circle)
-    Inertia=0.5f*mass*radius*radius;
-    else if(shape==ShapeType::Box)
-    Inertia=0.833333333f*mass*((width*width)+(height/height));
+    RotationalVelocity = 0;
+    Rotation = 0;
     if(isStatic){
         InvMass = 0;
-        InvInteria=0;
     }
     else{
         InvMass = 1.0f / mass;
-        Inertia=1.0f/Inertia;
     }
    if(shapeType==ShapeType::Box){
     vertices.resize(4);
@@ -59,7 +53,7 @@ void Body2D::Draw() {
         DrawCircleLinesV(Position, Radius, BLUE);
     } 
     else if (shape == ShapeType::Box) {
-    DrawPolygonLine(transformedvertices,RED);
+                DrawPolygonLine(transformedvertices,RED);
     }
     DrawRectangleLines(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, GREEN);
 }
@@ -121,18 +115,6 @@ void Body2D::Rotate(float angle) {
   Vector2 Body2D::getVelocity() const {
     return Velocity;
   }
-    float Body2D::getRotation() const {
-        return Rotation;
-    }
-    float Body2D::getRotationalVelocity() const {
-        return RotationalVelocity;
-    }
-    void Body2D::setRotation(float angle) {
-        Rotation = angle;
-    }
-    void Body2D::setRotationalVelocity(float velocity) {
-        RotationalVelocity = velocity;
-    }
     float Body2D::getRadius() const {
         return Radius;
     }
@@ -144,9 +126,6 @@ void Body2D::Rotate(float angle) {
     } 
     float Body2D::getInvMass() const {
         return InvMass;
-    }
-    float Body2D::getInvInertia() const {
-        return InvInteria;
     }
     Vector2 Body2D::getForce() {
         return Force;
@@ -160,6 +139,18 @@ void Body2D::Rotate(float angle) {
     void Body2D::setVelocity(Vector2 velocity) {
         Velocity = velocity;
     }   
+    float Body2D::getRotation() const {
+        return Rotation;
+    }
+    float Body2D::getRotationalVelocity() const {
+        return RotationalVelocity;
+    }
+    void Body2D::setRotation(float angle) {
+        Rotation = angle;
+    }
+    void Body2D::setRotationalVelocity(float velocity) {
+        RotationalVelocity = velocity;
+    }
 void Body2D::getVertices(std::vector<Vector2>& Ref) const {
         Ref=transformedvertices;
     }
@@ -182,6 +173,5 @@ void Body2D::step(float dt,float gravity) {
    
 
 }
-
 
 

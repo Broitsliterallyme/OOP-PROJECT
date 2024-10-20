@@ -3,43 +3,36 @@
 
 #include <vector>
 #include "Body2D.h"
+#include <string>
 #include "Collision.h"
-#include "CollisionManifold.h"
+#include <algorithm>
+#include"CollisionManifold.h"
 
 class World {
 private:
-    struct ContactPairs {
-        int i;
-        int j;
-        ContactPairs(int x, int y) : i(x), j(y) {}
-    };
-
     std::vector<Body2D> bodies;
-    std::vector<ContactPairs> ContactPair; // Store potential contacts
+    std::vector<CollisionManifold> Manifolds;
     Collision collision;
     float gravity;
-    int MaxIter = 128;
-    int MinIter = 1;
+    int MaxIter=128;
+    int MinIter=1;
+    size_t BodyIgnored;
 
 public:
     World();
-    
+    std::vector<Vector2> ContactPoints1;
+    std::vector<Vector2> ContactPoints2;
+
     void AddBody(const Body2D& body);
+
     Body2D& GetBody(int index);
     void RemoveBody(Body2D& body);
+
     std::vector<Body2D>& GetBodies();
-    void Step(float dt, int iterations);
-    void ResolveCollisionBasic(CollisionManifold& manifold);
-    void ResolveCollisionRotation(CollisionManifold& manifold);
 
+    void Step(float dt,int iterations);
 
-private:
-    void SeperateBody(Body2D& ,Body2D& Bod2,Vector2 ,float );
-    void BroadPhase(); 
-    void NarrowPhase(); 
- float Cross( Vector2& a,  Vector2& b) {
-    return a.x * b.y - a.y * b.x;
-}
+    void ResolveCollision(CollisionManifold& manifold);
 };
 
-#endif 
+#endif

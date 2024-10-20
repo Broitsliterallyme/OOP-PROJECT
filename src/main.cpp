@@ -5,7 +5,7 @@ int main() {
     SetTargetFPS(0);
     std::vector<Vector2> points = { { -400, -300 }, { 400, -300 }, { 400, 300 }, { -400, 300 } };
     while (!WindowShouldClose()) {
-        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT )||IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+        if(IsMouseButtonDown(MOUSE_BUTTON_LEFT )||IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
         engine.dropbody();
         engine.Update();
         BeginDrawing();
