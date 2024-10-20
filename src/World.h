@@ -29,12 +29,14 @@ public:
     void RemoveBody(Body2D& body);
     std::vector<Body2D>& GetBodies();
     void Step(float dt, int iterations);
-    void ResolveCollision(CollisionManifold& manifold);
+    void ResolveCollisionBasic(CollisionManifold& manifold);
+    void ResolveCollisionRotation(CollisionManifold& manifold);
 
 
 private:
-    void BroadPhase(); // Detect potential collisions
-    void NarrowPhase(); // Handle actual collision detection
+    void SeperateBody(Body2D& ,Body2D& Bod2,Vector2 ,float );
+    void BroadPhase(); 
+    void NarrowPhase(); 
 };
 
-#endif // WORLD_H
+#endif 

@@ -61,25 +61,17 @@ void World::NarrowPhase() {
         Body2D& body2 = bodies[pair.j];
 
         if (collision.CollisionHandle(body1, body2, normal, depth)) {
-            if (body1.isStaticBody())
-                body2.Move(Vector2Scale(normal, -depth));
-            else if (body2.isStaticBody())
-                body1.Move(Vector2Scale(normal, depth));
-            else {
-                body1.Move(Vector2Scale(normal, depth / 2));
-                body2.Move(Vector2Scale(normal, -depth / 2));
-            }
-
             Vector2 Point1, Point2;
             int Count = 0;
+            SeperateBody(body1,body2,normal,depth);
             collision.FindContactPoints(body1, body2, Point1, Point2, Count);
             CollisionManifold Manifold(body1, body2, normal, depth, Point1, Point2, Count);
-         ResolveCollision(Manifold);
+         ResolveCollisionBasic(Manifold);
         }
     }
 }
 
-void World::ResolveCollision(CollisionManifold& manifold) {
+void World::ResolveCollisionBasic(CollisionManifold& manifold) {
     Body2D& body1 = manifold.bodyA;
     Body2D& body2 = manifold.bodyB;
     Vector2 normal = manifold.normal;
@@ -102,4 +94,29 @@ void World::ResolveCollision(CollisionManifold& manifold) {
 
     body1.setVelocity(Vector2Add(velocity1, Vector2Scale(normal, j * body1.getInvMass())));
     body2.setVelocity(Vector2Subtract(velocity2, Vector2Scale(normal, j * body2.getInvMass())));
+}
+void World::ResolveCollisionRotation(CollisionManifold& manifold){
+    Body2D& body1 = manifold.bodyA;
+    Body2D& body2 = manifold.bodyB;
+    Vector2 normal = manifold.normal;
+    float depth = manifold.depth;
+    Vector2 ContactPoint1=manifold.Point1;
+    Vector2 ContactPoint2=manifold.Point2;
+    int ContactCount=manifold.Count;
+    for(int i=0;i<ContactCount;i++){
+    float e = std::min(body1.getRestitution(), body2.getRestitution());
+
+    }
+
+
+}
+void World::SeperateBody(Body2D& body1,Body2D& body2,Vector2 normal,float depth){
+            if (body1.isStaticBody())
+                body2.Move(Vector2Scale(normal, -depth));
+            else if (body2.isStaticBody())
+                body1.Move(Vector2Scale(normal, depth));
+            else {
+                body1.Move(Vector2Scale(normal, depth / 2));
+                body2.Move(Vector2Scale(normal, -depth / 2));
+            }
 }
