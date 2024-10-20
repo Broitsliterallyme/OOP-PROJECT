@@ -44,6 +44,7 @@ public:
     Body2D();
     void CreateCircle(Vector2 position, float density, float radius, float restitution, bool isstatic, Body2D &body);
     void CreateRectangle(Vector2 position, float density, float length, float width, float restitution, bool isstatic, Body2D &body);
+    void CreateTriangle();
     void Draw();
     void getTransformedVertices();
     void GetAABB(); 
