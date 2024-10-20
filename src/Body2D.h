@@ -25,6 +25,8 @@ private:
     float Density;
     float Mass;
     float InvMass;
+    float Inertia;
+    float InvInteria;
     float Restitution;
     float Area;
     bool isStatic;

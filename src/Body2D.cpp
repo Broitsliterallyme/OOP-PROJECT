@@ -10,11 +10,17 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
     Force = {0, 0};
     RotationalVelocity = 0;
     Rotation = 0;
+    if(shape==ShapeType::Circle)
+    Inertia=0.5f*mass*radius*radius;
+    else if(shape==ShapeType::Box)
+    Inertia=0.833333333f*mass*((width*width)+(height/height));
     if(isStatic){
         InvMass = 0;
+        InvInteria=0;
     }
     else{
         InvMass = 1.0f / mass;
+        Inertia=1.0f/Inertia;
     }
    if(shapeType==ShapeType::Box){
     vertices.resize(4);

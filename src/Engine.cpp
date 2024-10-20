@@ -25,32 +25,22 @@ Engine::Engine() {
 
 void Engine::dropbody() {
     Body2D body;
-    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
     body.CreateRectangle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 60.0f, 60.0f, 0.7f, false, body);
         world.AddBody(body);    
     }
-    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
         body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 30.0f, 0.7f, false, body);
         world.AddBody(body);
     }
 }
 
 void Engine::bodydraw() {
-    std::vector<Body2D>& bodies = world.GetBodies(); 
-    std::vector<Vector2>& ContactPoints1 = world.ContactPoints1;
-    std::vector<Vector2>& ContactPoints2 = world.ContactPoints2;
-
-    
+    std::vector<Body2D>& bodies = world.GetBodies();  
     for (Body2D& body : bodies) {
         body.Draw();
     }
-    for (Vector2& point : ContactPoints1) {
-        DrawCircleV(point, 5.0f, RED);
-        
-    }
-    for (Vector2& point : ContactPoints2) {
-        DrawCircleV(point, 5.0f, RED);
-    }
+
     
     DrawText(std::to_string(bodies.size()).c_str(), 200, 200, 40, BLACK);
     DrawText(TextFormat("Frame Time: %.3f ms", GetFrameTime() * 1000.0f), 200, 250, 20, BLACK);
