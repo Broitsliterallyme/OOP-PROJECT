@@ -21,8 +21,14 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
         InvInteria = 0;
     }
     else{
-        InvMass = 5.0f / mass;
-        InvInteria = 5.0f /Inertia;
+        if(shapeType==ShapeType::Box){
+            InvMass = 1.0f / mass;
+            InvInteria = 1.0f /Inertia;
+        }
+        else if(shapeType==ShapeType::Circle){
+            InvMass = 1.0f / mass;
+            InvInteria = 1.0f /Inertia;
+        }
     }
    if(shapeType==ShapeType::Box){
     vertices.resize(4);
@@ -166,23 +172,20 @@ void Body2D::getVertices(std::vector<Vector2>& Ref) const {
         Ref=transformedvertices;
     }
 void Body2D::step(float dt,float gravity) {
-    if(isStatic){
-        return;
-    }
-    //Acceleration = Vector2Scale(Force, 1.0f / Mass);
-   Velocity = Vector2Add(Velocity, Vector2Scale(Vector2{0,gravity}, dt));
+    if(!isStatic){
+     Velocity = Vector2Add(Velocity, Vector2Scale(Vector2{0,gravity}, dt));    
     Position.x += Velocity.x * dt;
     Position.y += Velocity.y * dt;
     Rotation += RotationalVelocity * dt;
+    }
+    //Acceleration = Vector2Scale(Force, 1.0f / Mass);
+
     Force={0,0};
     updatevertices = true;
     aabbUpdate=true;
     GetAABB();
     getTransformedVertices();
   
-  
-   
-
 }
 
 

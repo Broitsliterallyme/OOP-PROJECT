@@ -36,6 +36,9 @@ private:
     void ResolveCollision(CollisionManifold& manifold);
     void ResolveCollisionRotation(CollisionManifold& manifold);
     void SeperateBody(Body2D& ,Body2D& ,Vector2 ,float );
+    float Cross(Vector2 a, Vector2 b) {
+        return a.x * b.y - a.y * b.x;
+    }
 };
 
 #endif // WORLD_H

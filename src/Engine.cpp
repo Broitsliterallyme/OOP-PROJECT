@@ -7,30 +7,24 @@ Engine::Engine() {
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
     Body2D body;
-    body.CreateRectangle({-400.0f,-100.0f}, 1.0f,30.0f,400.0f, 0.7f, true, body);
+    body.CreateRectangle({-400.0f,-100.0f}, 1.0f,30.0f,400.0f, 0.9f, true, body);
     body.Rotate(0.2f);
-    body.getTransformedVertices();
-    body.GetAABB();
     world.AddBody(body);
-    body.CreateRectangle({400.0f,-100.0f}, 1.0f,30.0f,400.0f, 0.7f, true, body);
+    body.CreateRectangle({400.0f,-100.0f}, 1.0f,30.0f,400.0f, 0.9f, true, body);
     body.Rotate(-0.2f);
-    body.getTransformedVertices();
-    body.GetAABB();
     world.AddBody(body);
-       body.CreateRectangle({0.0f,200.0f}, 1.0f,30.0f,1000.0f, 0.7f, true, body);
-    body.getTransformedVertices();
-    body.GetAABB();
+    body.CreateRectangle({0.0f,200.0f}, 1.0f,30.0f,1000.0f, 0.9f, true, body);
     world.AddBody(body);
 }
 
 void Engine::dropbody() {
     Body2D body;
-    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-    body.CreateRectangle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 60.0f, 60.0f, 0.7f, false, body);
+    if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+    body.CreateRectangle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 60.0f, 60.0f, 0.6f, false, body);
         world.AddBody(body);    
     }
-    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
-        body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 30.0f, 0.7f, false, body);
+    if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+        body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 30.0f, 0.6f, false, body);
         world.AddBody(body);
     }
 }

@@ -102,22 +102,24 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
        Body2D& body1 = manifold.bodyA;
     Body2D& body2 = manifold.bodyB;
     Vector2 normal = manifold.normal;
-    float depth = manifold.depth;
     int ContactCount=manifold.Count;
-    if (depth < 0) normal = Vector2Negate(normal);
     Vector2 ContactList[2]={manifold.Point1,manifold.Point2};
-    Vector2 ImplseList[2];
+    Vector2 ImplseList[2]={{0,0},{0,0}};
+    Vector2 RA[2]={{0,0},{0,0}};
+    Vector2 RB[2]={{0,0},{0,0}};
     float e = std::min(body1.getRestitution(), body2.getRestitution());
     for(int i=0;i<ContactCount;i++){
         Vector2 ra=Vector2Subtract(ContactList[i],body1.getPosition());
         Vector2 rb=Vector2Subtract(ContactList[i],body2.getPosition());
         Vector2 raPerp={-ra.y,ra.x};
         Vector2 rbPerp={-rb.y,rb.x};
+        RA[i]=ra;
+        RB[i]=rb;
         Vector2 angularLinearVelocityA=Vector2Scale(raPerp,body1.getRotationalVelocity());
         Vector2 angularLinearVelocityB=Vector2Scale(rbPerp,body2.getRotationalVelocity());
         Vector2 RelativeVelocity=Vector2Subtract
-                                (Vector2Add(body2.getVelocity(),angularLinearVelocityB), 
-                                Vector2Add(body1.getVelocity(),angularLinearVelocityA));
+                                (Vector2Add(body1.getVelocity(),angularLinearVelocityA), 
+                                Vector2Add(body2.getVelocity(),angularLinearVelocityB));
         float ContactVelocity=Vector2DotProduct(RelativeVelocity,normal);
         if(ContactVelocity>0) continue;
         float raPerpDotN=Vector2DotProduct(raPerp,normal);
@@ -133,7 +135,13 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
 }
     for(int i=0;i<ContactCount;i++){
         Vector2 Impulse=ImplseList[i];
-        body1.setVelocity(Vector2Add(body1.getVelocity(),Vector2Scale(Impulse,body1.getInvMass())));
-        body2.setVelocity(Vector2Subtract(body2.getVelocity(),Vector2Scale(Impulse,body2.getInvMass())));
+        Vector2 Ra=RA[i];
+        Vector2 Rb=RB[i];
+        Vector2 ReboundVelocity1=Vector2Add(body1.getVelocity(),Vector2Scale(Impulse,body1.getInvMass()));
+        Vector2 ReboundVelocity2=Vector2Subtract(body2.getVelocity(),Vector2Scale(Impulse,body2.getInvMass()));
+        body1.setVelocity(ReboundVelocity1);
+        body2.setVelocity(ReboundVelocity2);
+        body1.setRotationalVelocity(body1.getRotationalVelocity()+(Cross(Ra,Impulse)*body1.getInvInertia())); 
+        body2.setRotationalVelocity(body2.getRotationalVelocity()-(Cross(Rb,Impulse)*body2.getInvInertia()));
     }
 }
