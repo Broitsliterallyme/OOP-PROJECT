@@ -23,8 +23,6 @@ private:
 
 public:
     World();
-    std::vector<Vector2> RA;
-    std::vector<Vector2> RB;
     void AddBody(const Body2D& body);
     Body2D& GetBody(int index);
     void RemoveBody(Body2D& body);

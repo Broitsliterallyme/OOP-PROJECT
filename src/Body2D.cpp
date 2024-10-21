@@ -10,11 +10,19 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
     Force = {0, 0};
     RotationalVelocity = 0;
     Rotation = 0;
+    if(shapeType==ShapeType::Circle){
+        Inertia = 0.5f * mass * radius * radius;
+    }
+    else if(shapeType==ShapeType::Box){
+        Inertia = (1.0f / 12.0f) * mass * (width * width + height * height);
+    }
     if(isStatic){
         InvMass = 0;
+        InvInteria = 0;
     }
     else{
-        InvMass = 1.0f / mass;
+        InvMass = 5.0f / mass;
+        InvInteria = 5.0f /Inertia;
     }
    if(shapeType==ShapeType::Box){
     vertices.resize(4);
@@ -53,7 +61,7 @@ void Body2D::Draw() {
         DrawCircleLinesV(Position, Radius, BLUE);
     } 
     else if (shape == ShapeType::Box) {
-                DrawPolygonLine(transformedvertices,RED);
+    DrawPolygonLine(transformedvertices,RED);
     }
     DrawRectangleLines(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, GREEN);
 }
@@ -126,6 +134,9 @@ void Body2D::Rotate(float angle) {
     } 
     float Body2D::getInvMass() const {
         return InvMass;
+    }
+    float Body2D::getInvInertia() const {
+        return InvInteria;
     }
     Vector2 Body2D::getForce() {
         return Force;

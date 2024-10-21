@@ -355,7 +355,7 @@ bool Collision::CollisionHandle(Body2D& body1, Body2D& body2, Vector2& normal, f
      else if (body2.shape == ShapeType::Box ) 
      {
         bool result = IntersectCirclePolygon(body2, body1,body2.getPosition(), normal, depth);
-        depth = -depth;
+        normal=Vector2Negate(normal);
         return result;
      }
     }

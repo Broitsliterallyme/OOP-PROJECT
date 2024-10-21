@@ -61,8 +61,6 @@ void World::NarrowPhase() {
         Body2D& body2 = bodies[pair.j];
 
         if (collision.CollisionHandle(body1, body2, normal, depth)) {
-   
-
             Vector2 Point1, Point2;
             int Count = 0;
             SeperateBody(body1, body2, normal, depth);
@@ -87,9 +85,6 @@ void World::ResolveCollision(CollisionManifold& manifold) {
     Body2D& body1 = manifold.bodyA;
     Body2D& body2 = manifold.bodyB;
     Vector2 normal = manifold.normal;
-    float depth = manifold.depth;
-    // Only resolve if there's an overlap
-    if (depth < 0) normal = Vector2Negate(normal);
     if (body1.isStaticBody() && body2.isStaticBody()) return;
     Vector2 velocity1 = body1.getVelocity();
     Vector2 velocity2 = body2.getVelocity();
@@ -107,10 +102,12 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
        Body2D& body1 = manifold.bodyA;
     Body2D& body2 = manifold.bodyB;
     Vector2 normal = manifold.normal;
-    Vector2 ContactPoint1=manifold.Point1;
-    Vector2 ContactPoint2=manifold.Point2;
-    Vector2 ContactList[2]={ContactPoint1,ContactPoint2};
+    float depth = manifold.depth;
     int ContactCount=manifold.Count;
+    if (depth < 0) normal = Vector2Negate(normal);
+    Vector2 ContactList[2]={manifold.Point1,manifold.Point2};
+    Vector2 ImplseList[2];
+    float e = std::min(body1.getRestitution(), body2.getRestitution());
     for(int i=0;i<ContactCount;i++){
         Vector2 ra=Vector2Subtract(ContactList[i],body1.getPosition());
         Vector2 rb=Vector2Subtract(ContactList[i],body2.getPosition());
@@ -119,11 +116,24 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
         Vector2 angularLinearVelocityA=Vector2Scale(raPerp,body1.getRotationalVelocity());
         Vector2 angularLinearVelocityB=Vector2Scale(rbPerp,body2.getRotationalVelocity());
         Vector2 RelativeVelocity=Vector2Subtract
-                                (Vector2Add(body2.getVelocity(),angularLinearVelocityA), 
-                                Vector2Add(body1.getVelocity(),angularLinearVelocityB));
-        if(Vector2DotProduct(RelativeVelocity,normal)>0) continue;
-        
-
-        
+                                (Vector2Add(body2.getVelocity(),angularLinearVelocityB), 
+                                Vector2Add(body1.getVelocity(),angularLinearVelocityA));
+        float ContactVelocity=Vector2DotProduct(RelativeVelocity,normal);
+        if(ContactVelocity>0) continue;
+        float raPerpDotN=Vector2DotProduct(raPerp,normal);
+        float rbPerpDotN=Vector2DotProduct(rbPerp,normal);
+        float Denominator=(body1.getInvMass()+body2.getInvMass())+
+                     (raPerpDotN*raPerpDotN*body1.getInvInertia())+
+                    (rbPerpDotN*rbPerpDotN*body2.getInvInertia());
+         float j = -(1.0f + e) * ContactVelocity;
+    j /= Denominator;
+    j/=(float)ContactCount;
+    Vector2 Impulse=Vector2Scale(normal,j);
+    ImplseList[i]=Impulse;        
 }
+    for(int i=0;i<ContactCount;i++){
+        Vector2 Impulse=ImplseList[i];
+        body1.setVelocity(Vector2Add(body1.getVelocity(),Vector2Scale(Impulse,body1.getInvMass())));
+        body2.setVelocity(Vector2Subtract(body2.getVelocity(),Vector2Scale(Impulse,body2.getInvMass())));
+    }
 }
