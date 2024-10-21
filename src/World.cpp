@@ -101,64 +101,18 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold) {
     Vector2 normal = manifold.normal;
     Vector2 contactPoints[2] = { manifold.Point1, manifold.Point2 };
     int contactCount = manifold.Count;
-
-    Vector2 impulses[2];
-    Vector2 raList[2];
-    Vector2 rbList[2];
+    Vector2 impulses[2]={0};
+    Vector2 raList[2]={0};
+    Vector2 rbList[2]={0};
 
     float e = std::min(body1.getRestitution(), body2.getRestitution());
 
     for (int i = 0; i < contactCount; i++) {
-        Vector2 ra = Vector2Subtract(contactPoints[i], body1.getPosition());
-        Vector2 rb = Vector2Subtract(contactPoints[i], body2.getPosition());
-        raList[i] = ra;
-        rbList[i] = rb;
+        DrawCircleV(contactPoints[i], 5, RED);
 
-        // Angular linear velocity contributions
-        Vector2 angularLinearVelocity1 = Vector2Scale({ -ra.y, ra.x }, body1.getRotationalVelocity());
-        Vector2 angularLinearVelocity2 = Vector2Scale({ -rb.y, rb.x }, body2.getRotationalVelocity());
-
-        // Relative velocity
-        Vector2 relativeVelocity = Vector2Subtract(
-            Vector2Add(body2.getVelocity(), angularLinearVelocity2),
-            Vector2Add(body1.getVelocity(), angularLinearVelocity1)
-        );
-
-        // Project relative velocity onto the collision normal
-        float velocityAlongNormal = Vector2DotProduct(relativeVelocity, normal);
-        if (velocityAlongNormal > 0) continue;  // Bodies are separating, skip impulse calculation
-
-        // Compute effective inertia
-        float raPerpDotN = Vector2DotProduct({ -ra.y, ra.x }, normal);
-        float rbPerpDotN = Vector2DotProduct({ -rb.y, rb.x }, normal);
-        float denominator = (body1.getInvMass() + body2.getInvMass()) +
-            (raPerpDotN * raPerpDotN * body1.getInvInertia()) +
-            (rbPerpDotN * rbPerpDotN * body2.getInvInertia());
-
-        // Impulse scalar
-        float j = -(1.0f + e) * velocityAlongNormal / denominator;
-        j /= (float)contactCount;  // Average the impulse over the contact points
-        Vector2 impulse = Vector2Scale(normal, j);
-        impulses[i] = impulse;
     }
-
-    // Apply the impulses
-    for (int i = 0; i < contactCount; i++) {
-        Vector2 impulse = impulses[i];
-        Vector2 ra = raList[i];
-        Vector2 rb = rbList[i];
-
-        // Apply linear impulse
-        body1.setVelocity(Vector2Add(body1.getVelocity(), Vector2Scale(impulse, body1.getInvMass())));
-        body2.setVelocity(Vector2Subtract(body2.getVelocity(), Vector2Scale(impulse, body2.getInvMass())));
-
-        // Apply rotational impulse
-        body1.setRotationalVelocity(body1.getRotationalVelocity() -
-            (Cross(ra, impulse) * body1.getInvInertia()));
-        body2.setRotationalVelocity(body2.getRotationalVelocity() +
-            (Cross(rb, impulse) * body2.getInvInertia()));
     }
-}
+       
 
 
 void World::SeperateBody(Body2D& body1,Body2D& body2,Vector2 normal,float depth){

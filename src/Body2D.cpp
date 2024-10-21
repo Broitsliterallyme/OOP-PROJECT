@@ -59,7 +59,7 @@ void Body2D::Draw() {
         DrawCircleLinesV(Position, Radius, BLUE);
     } 
     else if (shape == ShapeType::Box) {
-                DrawPolygonLine(transformedvertices,RED);
+    DrawPolygonLine(transformedvertices,RED);
     }
     DrawRectangleLines(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, GREEN);
 }
