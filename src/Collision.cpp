@@ -370,7 +370,7 @@ bool Collision::CollisionHandle(Body2D& body1, Body2D& body2, Vector2& normal, f
 
     return false;
 }
-void Collision::FindContactPoints(Body2D& Body1,Body2D& Body2,Vector2& Point1,Vector2& Point2,int Count)
+void Collision::FindContactPoints(Body2D& Body1,Body2D& Body2,Vector2& Point1,Vector2& Point2,int& Count)
 {
 
     Count = 0;

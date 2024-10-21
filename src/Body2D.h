@@ -56,6 +56,10 @@ public:
     void step(float ,float );
     Vector2 getPosition() const ;
     Vector2 getVelocity() const ;
+    float getRotation() const;
+    float getRotationalVelocity() const;
+    void setRotation(float);
+    void setRotationalVelocity(float);
     void addForce(Vector2);
     Vector2 getForce();
     void setVelocity(Vector2);
@@ -63,6 +67,7 @@ public:
     bool isStaticBody() const;
     float getMass() const;
     float getInvMass() const;
+    float getInvInertia() const;
     float getRadius() const;
     void getVertices(std::vector<Vector2>&) const;
 

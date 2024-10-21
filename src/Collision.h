@@ -8,7 +8,7 @@ public:
     bool  IntersectPolygons( Body2D& , Body2D& ,Vector2,Vector2, Vector2& , float& );
     bool IntersectCirclePolygon( Body2D&,Body2D&, Vector2& , float& );   
     bool IntersectCirclePolygon( Body2D&,Body2D&,Vector2, Vector2& , float& ); 
-    void FindContactPoints(Body2D&, Body2D&, Vector2&, Vector2&,int);
+    void FindContactPoints(Body2D&, Body2D&, Vector2&, Vector2&,int&);
     bool CollisionHandle(Body2D&, Body2D&, Vector2&, float&);
     bool IntersectAABB(AABB, AABB);
 private:

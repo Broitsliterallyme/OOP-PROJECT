@@ -37,6 +37,9 @@ private:
     void SeperateBody(Body2D& ,Body2D& Bod2,Vector2 ,float );
     void BroadPhase(); 
     void NarrowPhase(); 
+ float Cross( Vector2& a,  Vector2& b) {
+    return a.x * b.y - a.y * b.x;
+}
 };
 
 #endif 
