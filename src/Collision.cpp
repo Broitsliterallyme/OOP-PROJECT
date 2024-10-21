@@ -453,12 +453,7 @@ Vector2 Collision::FindContactPoint( Body2D& Box, Body2D& Circle){
     }
     return cp;
 }
-bool NearlyEqual(const Vector2& v1, const Vector2& v2, float epsilon = 0.01f) {
-    return (std::fabs(v1.x - v2.x) < epsilon) && (std::fabs(v1.y - v2.y) < epsilon);
-}
-bool NearlyEqual(float f1, float f2, float epsilon = 0.01f) {
-    return std::fabs(f1 - f2) < epsilon;
-}
+
 
 void Collision::FindContactPointsBoxBox(Body2D& Body1, Body2D& Body2,Vector2& contact1, Vector2& contact2, int& contactCount) {
     contactCount = 0;
@@ -480,7 +475,7 @@ void Collision::FindContactPointsBoxBox(Body2D& Body1, Body2D& Body2,Vector2& co
             PointSegmentDistance(p, va, vb, distSq, cp);
 
             if (NearlyEqual(distSq, minDistSq)) {
-                if (!NearlyEqual(cp, contact1)) {
+                if (!NearlyEqualVector2(cp, contact1)) {
                     contact2 = cp;
                     contactCount = 2;
                 }
@@ -503,7 +498,7 @@ void Collision::FindContactPointsBoxBox(Body2D& Body1, Body2D& Body2,Vector2& co
             PointSegmentDistance(p, va, vb, distSq, cp);
 
             if (NearlyEqual(distSq, minDistSq)) {
-                if (!NearlyEqual(cp, contact1)) {
+                if (!NearlyEqualVector2(cp, contact1)) {
                     contact2 = cp;
                     contactCount = 2;
                 }

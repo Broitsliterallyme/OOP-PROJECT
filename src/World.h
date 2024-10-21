@@ -13,6 +13,11 @@ private:
         int j;
         ContactPairs(int x, int y) : i(x), j(y) {}
     };
+    Vector2 ImplseList[2];
+    Vector2 FrictionImpulseList[2];
+    Vector2 RA[2];
+    Vector2 RB[2];
+    float jList[2];
 
     std::vector<Body2D> bodies;
     std::vector<ContactPairs> ContactPair; // Store potential contacts
@@ -35,6 +40,7 @@ private:
     void NarrowPhase(); // Handle actual collision detection
     void ResolveCollision(CollisionManifold& manifold);
     void ResolveCollisionRotation(CollisionManifold& manifold);
+    void ResolveCollisionRotationFriction(CollisionManifold& manifold);
     void SeperateBody(Body2D& ,Body2D& ,Vector2 ,float );
 };
 

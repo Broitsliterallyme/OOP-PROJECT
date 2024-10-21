@@ -24,7 +24,7 @@ void Engine::dropbody() {
         world.AddBody(body);    
     }
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-        body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 30.0f, 0.4f, false, body);
+        body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 0.7f, 30.0f, 0.4f, false, body);
         world.AddBody(body);
     }
 }
@@ -54,7 +54,7 @@ void Engine::camerahandle() {
 void Engine::Update() {
     std::vector<Body2D>& bodies = world.GetBodies();
     float dt = GetFrameTime();
-    world.Step(dt,64); 
+    world.Step(dt,16); 
     int index=0;
     for(Body2D& body : bodies) {
         index++;

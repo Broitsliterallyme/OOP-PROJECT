@@ -28,6 +28,8 @@ private:
     float Inertia;
     float InvInteria;
     float Restitution;
+    float StaticFriction=0.3f;
+    float DynamicFriction=0.2f;
     float Area;
     bool isStatic;
     float Radius;
@@ -65,6 +67,8 @@ public:
     void setVelocity(Vector2);
     float getRestitution() const;
     bool isStaticBody() const;
+    float getStaticFriction() const;
+    float getDynamicFriction() const;
     float getMass() const;
     float getInvMass() const;
     float getInvInertia() const;

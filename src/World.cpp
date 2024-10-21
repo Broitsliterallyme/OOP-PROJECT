@@ -66,7 +66,7 @@ void World::NarrowPhase() {
             SeperateBody(body1, body2, normal, depth);
             collision.FindContactPoints(body1, body2, Point1, Point2, Count);
             CollisionManifold Manifold(body1, body2, normal, depth, Point1, Point2, Count);
-            ResolveCollisionRotation(Manifold);
+            ResolveCollisionRotationFriction(Manifold);
         }
     }
 }
@@ -142,5 +142,103 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
         body2.setVelocity(ReboundVelocity2);
         body1.setRotationalVelocity(body1.getRotationalVelocity()+( Vector2Cross(Ra,Impulse)*body1.getInvInertia())); 
         body2.setRotationalVelocity(body2.getRotationalVelocity()-( Vector2Cross(Rb,Impulse)*body2.getInvInertia()));
+    }
+}
+
+void World::ResolveCollisionRotationFriction(CollisionManifold& manifold){
+       Body2D& body1 = manifold.bodyA;
+    Body2D& body2 = manifold.bodyB;
+    Vector2 normal = manifold.normal;
+    int ContactCount=manifold.Count;
+    Vector2 ContactList[2]={manifold.Point1,manifold.Point2};
+    float sf=(body1.getStaticFriction()+body2.getStaticFriction())/2;
+    float df=(body1.getDynamicFriction()+body2.getDynamicFriction())/2;
+    for(int i=0;i<2;i++){
+        ImplseList[i]={0,0};
+        FrictionImpulseList[i]={0,0};
+        RA[i]={0,0};
+        RB[i]={0,0};
+        jList[i]=0;
+    }
+    float e = std::min(body1.getRestitution(), body2.getRestitution());
+    for(int i=0;i<ContactCount;i++){
+        Vector2 ra=Vector2Subtract(ContactList[i],body1.getPosition());
+        Vector2 rb=Vector2Subtract(ContactList[i],body2.getPosition());
+        Vector2 raPerp={-ra.y,ra.x};
+        Vector2 rbPerp={-rb.y,rb.x};
+        RA[i]=ra;
+        RB[i]=rb;
+        Vector2 angularLinearVelocityA=Vector2Scale(raPerp,body1.getRotationalVelocity());
+        Vector2 angularLinearVelocityB=Vector2Scale(rbPerp,body2.getRotationalVelocity());
+        Vector2 RelativeVelocity=Vector2Subtract
+                                (Vector2Add(body1.getVelocity(),angularLinearVelocityA), 
+                                Vector2Add(body2.getVelocity(),angularLinearVelocityB));
+        float ContactVelocity=Vector2DotProduct(RelativeVelocity,normal);
+        if(ContactVelocity>0) continue;
+        float raPerpDotN=Vector2DotProduct(raPerp,normal);
+        float rbPerpDotN=Vector2DotProduct(rbPerp,normal);
+        float Denominator=(body1.getInvMass()+body2.getInvMass())+
+                     (raPerpDotN*raPerpDotN*body1.getInvInertia())+
+                    (rbPerpDotN*rbPerpDotN*body2.getInvInertia());
+         float j = -(1.0f + e) * ContactVelocity;
+    j /= Denominator;
+    Vector2 Impulse=Vector2Scale(normal,j);
+    ImplseList[i]=Impulse;
+    jList[i]=j;        
+}
+    for(int i=0;i<ContactCount;i++){
+        Vector2 Impulse=ImplseList[i];
+        Vector2 Ra=RA[i];
+        Vector2 Rb=RB[i];
+        Vector2 ReboundVelocity1=Vector2Add(body1.getVelocity(),Vector2Scale(Impulse,body1.getInvMass()));
+        Vector2 ReboundVelocity2=Vector2Subtract(body2.getVelocity(),Vector2Scale(Impulse,body2.getInvMass()));
+        body1.setVelocity(ReboundVelocity1);
+        body2.setVelocity(ReboundVelocity2);
+        body1.setRotationalVelocity(body1.getRotationalVelocity()+( Vector2Cross(Ra,Impulse)*body1.getInvInertia())); 
+        body2.setRotationalVelocity(body2.getRotationalVelocity()-( Vector2Cross(Rb,Impulse)*body2.getInvInertia()));
+    }
+ for(int i=0;i<ContactCount;i++){
+        Vector2 ra=RA[i];
+        Vector2 rb=RB[i];
+        Vector2 raPerp={-ra.y,ra.x};
+        Vector2 rbPerp={-rb.y,rb.x};
+        Vector2 angularLinearVelocityA=Vector2Scale(raPerp,body1.getRotationalVelocity());
+        Vector2 angularLinearVelocityB=Vector2Scale(rbPerp,body2.getRotationalVelocity());
+        Vector2 RelativeVelocity=Vector2Subtract
+                                (Vector2Add(body1.getVelocity(),angularLinearVelocityA), 
+                                Vector2Add(body2.getVelocity(),angularLinearVelocityB));
+
+        float ContactVelocity=Vector2DotProduct(RelativeVelocity,normal);
+        Vector2 tangent=Vector2Subtract(RelativeVelocity,Vector2Scale(normal,ContactVelocity));
+        if(NearlyEqualVector2(tangent,Vector2Zero())) continue;
+        else  tangent=Vector2Normalize(tangent);
+        float raPerpDotT=Vector2DotProduct(raPerp,tangent);
+        float rbPerpDotT=Vector2DotProduct(rbPerp,tangent);
+        float Denominator=(body1.getInvMass()+body2.getInvMass())+
+                     (raPerpDotT*raPerpDotT*body1.getInvInertia())+
+                    (rbPerpDotT*rbPerpDotT*body2.getInvInertia());
+         float jt = -(1.0f + e) * Vector2DotProduct(RelativeVelocity,tangent);
+    jt/= Denominator;
+    Vector2 FrictionImpulse;
+    float j=jList[i];
+    if(std::abs(jt)<=sf*j){
+        FrictionImpulse=Vector2Scale(tangent,jt);
+    }
+    else{
+        FrictionImpulse=Vector2Scale(tangent,-j*df);
+
+    }
+    FrictionImpulseList[i]=FrictionImpulse;       
+}
+    for(int i=0;i<ContactCount;i++){
+        Vector2 FrictionImpulse=FrictionImpulseList[i];
+        Vector2 Ra=RA[i];
+        Vector2 Rb=RB[i];
+        Vector2 ReboundVelocity1=Vector2Add(body1.getVelocity(),Vector2Scale(FrictionImpulse,body1.getInvMass()));
+        Vector2 ReboundVelocity2=Vector2Subtract(body2.getVelocity(),Vector2Scale(FrictionImpulse,body2.getInvMass()));
+        body1.setVelocity(ReboundVelocity1);
+        body2.setVelocity(ReboundVelocity2);
+        body1.setRotationalVelocity(body1.getRotationalVelocity()+( Vector2Cross(Ra,FrictionImpulse)*body1.getInvInertia())); 
+        body2.setRotationalVelocity(body2.getRotationalVelocity()-( Vector2Cross(Rb,FrictionImpulse)*body2.getInvInertia()));
     }
 }

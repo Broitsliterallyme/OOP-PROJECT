@@ -135,6 +135,12 @@ void Body2D::Rotate(float angle) {
     float Body2D::getRestitution() const {
         return Restitution;
     }   
+    float Body2D::getStaticFriction() const {
+        return StaticFriction;
+    }
+    float Body2D::getDynamicFriction() const {
+        return DynamicFriction;
+    }
     float Body2D::getMass() const {
         return Mass;
     } 
