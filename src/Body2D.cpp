@@ -64,12 +64,12 @@ void Body2D::CreateRectangle(Vector2 position, float density, float length, floa
 
 void Body2D::Draw() {
     if (shape == ShapeType::Circle) {
-        DrawCircleLinesV(Position, Radius, BLUE);
+        DrawCircleV(Position, Radius, BLUE);
     } 
     else if (shape == ShapeType::Box) {
-    DrawPolygonLine(transformedvertices,RED);
+    DrawFilledPolygon(transformedvertices,RED);
     }
-    DrawRectangleLines(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, GREEN);
+    //DrawRectangleLines(aabb.min.x, aabb.min.y, aabb.max.x - aabb.min.x, aabb.max.y - aabb.min.y, GREEN);
 }
 void Body2D::getTransformedVertices() {
     if (updatevertices) {

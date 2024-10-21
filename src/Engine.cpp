@@ -13,7 +13,7 @@ Engine::Engine() {
     body.CreateRectangle({400.0f,-100.0f}, 1.0f,30.0f,400.0f, 0.9f, true, body);
     body.Rotate(-0.2f);
     world.AddBody(body);
-    body.CreateRectangle({0.0f,200.0f}, 1.0f,30.0f,1000.0f, 0.9f, true, body);
+    body.CreateRectangle({0.0f,200.0f}, 1.0f,30.0f,1000.0f, 0.6f, true, body);
     world.AddBody(body);
 }
 

@@ -129,7 +129,6 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
                     (rbPerpDotN*rbPerpDotN*body2.getInvInertia());
          float j = -(1.0f + e) * ContactVelocity;
     j /= Denominator;
-    j/=(float)ContactCount;
     Vector2 Impulse=Vector2Scale(normal,j);
     ImplseList[i]=Impulse;        
 }
@@ -141,7 +140,7 @@ void World::ResolveCollisionRotation(CollisionManifold& manifold){
         Vector2 ReboundVelocity2=Vector2Subtract(body2.getVelocity(),Vector2Scale(Impulse,body2.getInvMass()));
         body1.setVelocity(ReboundVelocity1);
         body2.setVelocity(ReboundVelocity2);
-        body1.setRotationalVelocity(body1.getRotationalVelocity()+(Cross(Ra,Impulse)*body1.getInvInertia())); 
-        body2.setRotationalVelocity(body2.getRotationalVelocity()-(Cross(Rb,Impulse)*body2.getInvInertia()));
+        body1.setRotationalVelocity(body1.getRotationalVelocity()+( Vector2Cross(Ra,Impulse)*body1.getInvInertia())); 
+        body2.setRotationalVelocity(body2.getRotationalVelocity()-( Vector2Cross(Rb,Impulse)*body2.getInvInertia()));
     }
 }
