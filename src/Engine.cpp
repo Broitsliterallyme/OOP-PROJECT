@@ -24,7 +24,7 @@ void Engine::dropbody() {
         world.AddBody(body);    
     }
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-        body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 0.7f, 30.0f, 0.4f, false, body);
+        body.CreateCircle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 30.0f, 0.4f, false, body);
         world.AddBody(body);
     }
 }
@@ -35,9 +35,6 @@ void Engine::bodydraw() {
     for (Body2D& body : bodies) {
         body.Draw();
     }
-     
-
-    
     DrawText(std::to_string(bodies.size()).c_str(), 200, 200, 40, BLACK);
     DrawText(TextFormat("Frame Time: %.3f ms", GetFrameTime() * 1000.0f), 200, 250, 20, BLACK);
     DrawFPS(0, 0);

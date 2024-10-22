@@ -28,8 +28,8 @@ private:
     float Inertia;
     float InvInteria;
     float Restitution;
-    float StaticFriction=0.3f;
-    float DynamicFriction=0.2f;
+    float StaticFriction=0.25f;
+    float DynamicFriction=0.05f;
     float Area;
     bool isStatic;
     float Radius;
@@ -48,7 +48,6 @@ public:
     Body2D();
     void CreateCircle(Vector2 position, float density, float radius, float restitution, bool isstatic, Body2D &body);
     void CreateRectangle(Vector2 position, float density, float length, float width, float restitution, bool isstatic, Body2D &body);
-    void CreateTriangle();
     void Draw();
     void getTransformedVertices();
     void GetAABB(); 

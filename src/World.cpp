@@ -45,9 +45,9 @@ void World::BroadPhase() {
 
     for (size_t i = 0; i < bodies.size(); ++i) {
         for (size_t j = i + 1; j < bodies.size(); ++j) {
-            if (collision.IntersectAABB(bodies[i].aabb, bodies[j].aabb)) {
+            if (collision.IntersectAABB(bodies[i].aabb, bodies[j].aabb)) 
                 ContactPair.emplace_back(i, j); // Store pairs that may collide
-            }
+            
         }
     }
 }
@@ -219,6 +219,7 @@ void World::ResolveCollisionRotationFriction(CollisionManifold& manifold){
                     (rbPerpDotT*rbPerpDotT*body2.getInvInertia());
          float jt = -(1.0f + e) * Vector2DotProduct(RelativeVelocity,tangent);
     jt/= Denominator;
+
     Vector2 FrictionImpulse;
     float j=jList[i];
     if(std::abs(jt)<=sf*j){

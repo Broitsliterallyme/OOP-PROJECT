@@ -14,7 +14,7 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
         Inertia = 0.5f * mass * radius * radius;
     }
     else if(shapeType==ShapeType::Box){
-        Inertia = (1.0f / 9.0f) * mass * ((width * width) + (height * height));
+        Inertia = (1.0f / 12.0f) * mass * ((width * width) + (height * height));
     }
     if(isStatic){
         InvMass = 0;

@@ -5,12 +5,13 @@
 class BodyTransform
 {
     
-  
-    public:
-      float PositionX;
+  private:
+    float PositionX;
     float PositionY;
     float Sin;
     float Cos;
+    public:
+
     BodyTransform(Vector2 , float );
     BodyTransform(float,float,float);
     BodyTransform() = default;
