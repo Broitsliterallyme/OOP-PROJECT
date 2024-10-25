@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.0)
+project("TEST")
+
+find_package(raylib REQUIRED)
+
+file(GLOB SOURCES "src/*.cpp")
+
+set(STARTUP_FILE "src/main.cpp")
+
+add_executable(${PROJECT_NAME} ${STARTUP_FILE} ${SOURCES} )
+
+target_link_libraries(${PROJECT_NAME} raylib)
