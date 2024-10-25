@@ -28,8 +28,8 @@ private:
     float Inertia;
     float InvInteria;
     float Restitution;
-    float StaticFriction=0.25f;
-    float DynamicFriction=0.05f;
+    float StaticFriction;
+    float DynamicFriction;
     float Area;
     bool isStatic;
     float Radius;

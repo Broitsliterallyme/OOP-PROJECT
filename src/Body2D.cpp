@@ -24,10 +24,14 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
         if(shapeType==ShapeType::Box){
             InvMass = 1.0f / mass;
             InvInteria = 1.0f /Inertia;
+            StaticFriction = 0.2f;  
+            DynamicFriction = 0.1f;
         }
         else if(shapeType==ShapeType::Circle){
             InvMass = 1.0f / mass;
             InvInteria = 1.0f /Inertia;
+            StaticFriction = 0.2f;
+            DynamicFriction = 0.2f;
         }
     }
    if(shapeType==ShapeType::Box){
