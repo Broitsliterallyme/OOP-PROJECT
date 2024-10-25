@@ -12,9 +12,13 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
     Rotation = 0;
     if(shapeType==ShapeType::Circle){
         Inertia = 0.5f * mass * radius * radius;
+        StaticFriction = 0.2f;
+        DynamicFriction = 0.1f;
     }
     else if(shapeType==ShapeType::Box){
-        Inertia = (1.0f / 12.0f) * mass * ((width * width) + (height * height));
+        Inertia = (1.0f / 5.0f) * mass * ((width * width) + (height * height));
+        StaticFriction = 0.2f;  
+        DynamicFriction = 0.1f;
     }
     if(isStatic){
         InvMass = 0;
@@ -24,14 +28,12 @@ Body2D::Body2D(Vector2 position, float density, float mass, float restitution, f
         if(shapeType==ShapeType::Box){
             InvMass = 1.0f / mass;
             InvInteria = 1.0f /Inertia;
-            StaticFriction = 0.2f;  
-            DynamicFriction = 0.1f;
+
         }
         else if(shapeType==ShapeType::Circle){
             InvMass = 1.0f / mass;
             InvInteria = 1.0f /Inertia;
-            StaticFriction = 0.2f;
-            DynamicFriction = 0.2f;
+
         }
     }
    if(shapeType==ShapeType::Box){
@@ -69,6 +71,12 @@ void Body2D::CreateRectangle(Vector2 position, float density, float length, floa
 void Body2D::Draw() {
     if (shape == ShapeType::Circle) {
         DrawCircleV(Position, Radius, BLUE);
+        Vector2 lineStart = { Position.x - Radius * cos(Rotation), Position.y - Radius * sin(Rotation) };
+        Vector2 lineEnd = { Position.x + Radius * cos(Rotation), Position.y + Radius * sin(Rotation) };
+        DrawLineV(lineStart, lineEnd, BLACK);
+        Vector2 lineStart2 = { Position.x - Radius * cos(Rotation+PI/2), Position.y - Radius * sin(Rotation+PI/2) };
+        Vector2 lineEnd2 = { Position.x + Radius * cos(Rotation+PI/2), Position.y + Radius * sin(Rotation+PI/2) };
+        DrawLineV(lineStart2, lineEnd2, BLACK);
     } 
     else if (shape == ShapeType::Box) {
     DrawFilledPolygon(transformedvertices,RED);

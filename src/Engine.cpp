@@ -20,7 +20,7 @@ Engine::Engine() {
 void Engine::dropbody() {
     Body2D body;
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
-    body.CreateRectangle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 60.0f, 60.0f, 0.6f, false, body);
+    body.CreateRectangle(GetScreenToWorld2D(GetMousePosition(), camera), 1.0f, 60.0f, 60.0f, 0.4f, false, body);
         world.AddBody(body);    
     }
     if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
