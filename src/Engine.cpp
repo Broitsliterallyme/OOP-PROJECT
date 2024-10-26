@@ -1,6 +1,5 @@
 #include "Engine.h"
 #include <string>
-
 Engine::Engine() {
     camera.target = {0.0f, 0.0f};
     camera.offset = {0.0f, 0.0f};
@@ -16,7 +15,6 @@ Engine::Engine() {
     body.CreateRectangle({0.0f,200.0f}, 1.0f,30.0f,1000.0f, 1.0f, true, body);
     world.AddBody(body);
 }
-
 void Engine::dropbody() {
     Body2D body;
     if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
@@ -28,7 +26,6 @@ void Engine::dropbody() {
         world.AddBody(body);
     }
 }
-
 void Engine::bodydraw() {
     std::vector<Body2D>& bodies = world.GetBodies();
 
@@ -39,7 +36,6 @@ void Engine::bodydraw() {
     DrawText(TextFormat("Frame Time: %.3f ms", GetFrameTime() * 1000.0f), 200, 250, 20, BLACK);
     DrawFPS(0, 0);
 }
-
 void Engine::camerahandle() {
     camera.offset = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
     camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
@@ -47,7 +43,6 @@ void Engine::camerahandle() {
     else if (camera.zoom < 0.1f) camera.zoom = 0.1f;
     BeginMode2D(camera);
 }
-
 void Engine::Update() {
     std::vector<Body2D>& bodies = world.GetBodies();
     float dt = GetFrameTime();
@@ -57,9 +52,6 @@ void Engine::Update() {
         index++;
        if(body.aabb.max.y>=400){
           world.RemoveBody(body);
-
       }
-
-  
     }
 }

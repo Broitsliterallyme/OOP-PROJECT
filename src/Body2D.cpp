@@ -124,16 +124,13 @@ aabbUpdate=false;
 void Body2D::Move(Vector2 velocity) {
     Position.x += velocity.x;
     Position.y += velocity.y;
- 
 }
 
 void Body2D::Moveto(Vector2 position) {
-    Position = position;
-  
+    Position = position; 
 }
 void Body2D::Rotate(float angle) {
     Rotation += angle;
-   
 }
  Vector2 Body2D::getPosition() const {
     return Position;
